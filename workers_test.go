@@ -8,11 +8,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestWorkersProcess(t *testing.T) {
-	type TestPayload struct {
-		Input string
-	}
-	f := func(job *Job) error {
+type TestPayload struct {
+	Input string
+}
+
+func NewCopyFunc(t *testing.T) func(job *Job) error {
+	return func(job *Job) error {
 		payload, ok := job.Payload.(*TestPayload)
 		if assert.True(t, ok) {
 			if payload.Input == "" {
@@ -22,8 +23,10 @@ func TestWorkersProcess(t *testing.T) {
 		time.Sleep(100 * time.Millisecond)
 		return nil
 	}
+}
 
-	workers := NewWorkers(f, 3)
+func TestWorkersProcess(t *testing.T) {
+	workers := NewWorkers(NewCopyFunc(t), 3)
 
 	// Empty jobs
 	jobs0 := Jobs{}
