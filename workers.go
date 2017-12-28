@@ -33,7 +33,7 @@ func (ws Workers) process(jobs Jobs) error {
 		}
 	}
 
-	return jobs.error()
+	return jobs.Error()
 }
 
 func (ws Workers) done() bool {

@@ -7,7 +7,7 @@ import (
 
 type Jobs []*Job
 
-func (jobs Jobs) error() error {
+func (jobs Jobs) Error() error {
 	messages := []string{}
 	for _, t := range jobs {
 		if t.Error != nil {
