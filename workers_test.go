@@ -23,11 +23,7 @@ func TestWorkersProcess(t *testing.T) {
 		return nil
 	}
 
-	workers := Workers{
-		&Worker{Proc: f},
-		&Worker{Proc: f},
-		&Worker{Proc: f},
-	}
+	workers := NewWorkers(f, 3)
 
 	// Empty jobs
 	jobs0 := Jobs{}

@@ -6,6 +6,14 @@ import (
 
 type Workers []*Worker
 
+func NewWorkers(proc func(job *Job) error, workers int) Workers {
+	r := Workers{}
+	for i := 0; i < workers; i++ {
+		r = append(r, &Worker{Proc: proc})
+	}
+	return r
+}
+
 func (ws Workers) process(jobs Jobs) error {
 	c := make(chan *Job, len(jobs))
 	for _, job := range jobs {
