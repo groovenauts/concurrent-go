@@ -10,13 +10,13 @@ import (
 
 func TestWorkersProcess(t *testing.T) {
 	type TestPayload struct {
-		Data string
+		Input string
 	}
 	f := func(job *Job) error {
 		payload, ok := job.Payload.(*TestPayload)
 		if assert.True(t, ok) {
-			if payload.Data == "" {
-				return fmt.Errorf("Data is blank")
+			if payload.Input == "" {
+				return fmt.Errorf("Input is blank")
 			}
 		}
 		time.Sleep(100 * time.Millisecond)
@@ -32,7 +32,7 @@ func TestWorkersProcess(t *testing.T) {
 
 	// 1 job
 	jobs1 := Jobs{
-		&Job{Payload: &TestPayload{Data: "foo"}},
+		&Job{Payload: &TestPayload{Input: "foo"}},
 	}
 	err = workers.process(jobs1)
 	assert.NoError(t, err)
@@ -42,32 +42,32 @@ func TestWorkersProcess(t *testing.T) {
 		&Job{Payload: &TestPayload{}},
 	}
 	err = workers.process(jobs1Error)
-	assert.Equal(t, "Data is blank", err.Error())
+	assert.Equal(t, "Input is blank", err.Error())
 
 	// 1 success and 1 error
 	jobs1Success1Error := Jobs{
-		&Job{Payload: &TestPayload{Data: "foo"}},
+		&Job{Payload: &TestPayload{Input: "foo"}},
 		&Job{Payload: &TestPayload{}},
 	}
 	err = workers.process(jobs1Success1Error)
-	assert.Equal(t, "Data is blank", err.Error())
+	assert.Equal(t, "Input is blank", err.Error())
 
 	// 3 success and 2 error
 	jobs3Success2Error := Jobs{
 		&Job{Payload: &TestPayload{}},
-		&Job{Payload: &TestPayload{Data: "foo"}},
-		&Job{Payload: &TestPayload{Data: "foo"}},
+		&Job{Payload: &TestPayload{Input: "foo"}},
+		&Job{Payload: &TestPayload{Input: "foo"}},
 		&Job{Payload: &TestPayload{}},
-		&Job{Payload: &TestPayload{Data: "foo"}},
+		&Job{Payload: &TestPayload{Input: "foo"}},
 	}
 	err = workers.process(jobs3Success2Error)
-	assert.Equal(t, "Data is blank\nData is blank", err.Error())
+	assert.Equal(t, "Input is blank\nInput is blank", err.Error())
 
 	// 3 success
 	jobs3Success := Jobs{
-		&Job{Payload: &TestPayload{Data: "foo"}},
-		&Job{Payload: &TestPayload{Data: "foo"}},
-		&Job{Payload: &TestPayload{Data: "foo"}},
+		&Job{Payload: &TestPayload{Input: "foo"}},
+		&Job{Payload: &TestPayload{Input: "foo"}},
+		&Job{Payload: &TestPayload{Input: "foo"}},
 	}
 	err = workers.process(jobs3Success)
 	assert.NoError(t, err)
