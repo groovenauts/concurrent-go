@@ -27,59 +27,59 @@ func NewCopyFunc(t *testing.T) func(job *Job) error {
 
 func TestWorkersProcessEmptyJobs(t *testing.T) {
 	workers := NewWorkers(NewCopyFunc(t), 3)
-	jobs0 := Jobs{}
-	err := workers.process(jobs0)
+	jobs := Jobs{}
+	err := workers.process(jobs)
 	assert.NoError(t, err)
 }
 
 func TestWorkersProcess1Job(t *testing.T) {
 	workers := NewWorkers(NewCopyFunc(t), 3)
-	jobs1 := Jobs{
+	jobs := Jobs{
 		&Job{Payload: &TestPayload{Input: "foo"}},
 	}
-	err := workers.process(jobs1)
+	err := workers.process(jobs)
 	assert.NoError(t, err)
 }
 
 func TestWorkersProcess1ErrorJob(t *testing.T) {
 	workers := NewWorkers(NewCopyFunc(t), 3)
-	jobs1Error := Jobs{
+	jobs := Jobs{
 		&Job{Payload: &TestPayload{}},
 	}
-	err := workers.process(jobs1Error)
+	err := workers.process(jobs)
 	assert.Equal(t, "Input is blank", err.Error())
 }
 
 func TestWorkersProcess1SuccessAnd1Error(t *testing.T) {
 	workers := NewWorkers(NewCopyFunc(t), 3)
-	jobs1Success1Error := Jobs{
+	jobs := Jobs{
 		&Job{Payload: &TestPayload{Input: "foo"}},
 		&Job{Payload: &TestPayload{}},
 	}
-	err := workers.process(jobs1Success1Error)
+	err := workers.process(jobs)
 	assert.Equal(t, "Input is blank", err.Error())
 }
 
 func TestWorkersProcess3SuccessesAnd2Errors(t *testing.T) {
 	workers := NewWorkers(NewCopyFunc(t), 3)
-	jobs3Success2Error := Jobs{
+	jobs := Jobs{
 		&Job{Payload: &TestPayload{}},
 		&Job{Payload: &TestPayload{Input: "foo"}},
 		&Job{Payload: &TestPayload{Input: "foo"}},
 		&Job{Payload: &TestPayload{}},
 		&Job{Payload: &TestPayload{Input: "foo"}},
 	}
-	err := workers.process(jobs3Success2Error)
+	err := workers.process(jobs)
 	assert.Equal(t, "Input is blank\nInput is blank", err.Error())
 }
 
 func TestWorkersProcess3Successes(t *testing.T) {
 	workers := NewWorkers(NewCopyFunc(t), 3)
-	jobs3Success := Jobs{
+	jobs := Jobs{
 		&Job{Payload: &TestPayload{Input: "foo"}},
 		&Job{Payload: &TestPayload{Input: "foo"}},
 		&Job{Payload: &TestPayload{Input: "foo"}},
 	}
-	err := workers.process(jobs3Success)
+	err := workers.process(jobs)
 	assert.NoError(t, err)
 }
