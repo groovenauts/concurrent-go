@@ -31,7 +31,7 @@ func NewCopyFunc(t *testing.T) func(job *Job) error {
 func TestWorkersProcessEmptyJobs(t *testing.T) {
 	workers := NewWorkers(NewCopyFunc(t), 3)
 	jobs := Jobs{}
-	workers.process(jobs)
+	workers.Process(jobs)
 	assert.NoError(t, jobs.Error())
 }
 
@@ -41,7 +41,7 @@ func TestWorkersProcess1Job(t *testing.T) {
 	jobs := Jobs{
 		&Job{Payload: payload1},
 	}
-	workers.process(jobs)
+	workers.Process(jobs)
 	assert.NoError(t, jobs.Error())
 	assert.Equal(t, "foo", payload1.Output)
 }
@@ -52,7 +52,7 @@ func TestWorkersProcess1ErrorJob(t *testing.T) {
 	jobs := Jobs{
 		&Job{Payload: payload1},
 	}
-	workers.process(jobs)
+	workers.Process(jobs)
 	assert.Equal(t, "Input is blank", jobs.Error().Error())
 	assert.Zero(t, payload1.Output)
 }
@@ -65,7 +65,7 @@ func TestWorkersProcess1SuccessAnd1Error(t *testing.T) {
 		&Job{Payload: payload1},
 		&Job{Payload: payload2},
 	}
-	workers.process(jobs)
+	workers.Process(jobs)
 	assert.Equal(t, "Input is blank", jobs.Error().Error())
 	assert.Equal(t, "foo", payload1.Output)
 	assert.Zero(t, payload2.Output)
@@ -80,7 +80,7 @@ func TestWorkersProcess3SuccessesAnd2Errors(t *testing.T) {
 		&Job{Payload: &TestPayload{}},
 		&Job{Payload: &TestPayload{Input: "foo"}},
 	}
-	workers.process(jobs)
+	workers.Process(jobs)
 	assert.Equal(t, "Input is blank\nInput is blank", jobs.Error().Error())
 }
 
@@ -95,7 +95,7 @@ func TestWorkersProcess3Successes(t *testing.T) {
 	for _, payload := range payloads {
 		jobs = append(jobs, &Job{Payload: payload})
 	}
-	workers.process(jobs)
+	workers.Process(jobs)
 	assert.NoError(t, jobs.Error())
 	for _, payload := range payloads {
 		assert.Equal(t, "foo", payload.Output)

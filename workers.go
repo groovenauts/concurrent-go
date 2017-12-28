@@ -14,7 +14,7 @@ func NewWorkers(proc func(job *Job) error, workers int) Workers {
 	return r
 }
 
-func (ws Workers) process(jobs Jobs) {
+func (ws Workers) Process(jobs Jobs) {
 	c := make(chan *Job, len(jobs))
 	for _, job := range jobs {
 		c <- job
