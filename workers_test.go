@@ -24,9 +24,9 @@ func TestWorkersProcess(t *testing.T) {
 	}
 
 	workers := Workers{
-		&Worker{impl: f},
-		&Worker{impl: f},
-		&Worker{impl: f},
+		&Worker{Proc: f},
+		&Worker{Proc: f},
+		&Worker{Proc: f},
 	}
 
 	// Empty jobs

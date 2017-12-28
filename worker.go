@@ -2,7 +2,7 @@ package concurrent
 
 type Worker struct {
 	jobs chan *Job
-	impl func(job *Job) error
+	Proc func(job *Job) error
 	done bool
 }
 
@@ -22,7 +22,7 @@ func (w *Worker) run() {
 			continue
 		}
 
-		err := w.impl(job)
+		err := w.Proc(job)
 		if err != nil {
 			job.Error = err
 			continue
