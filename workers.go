@@ -28,13 +28,13 @@ func (ws Workers) Process(jobs Jobs) {
 
 	for {
 		time.Sleep(100 * time.Millisecond)
-		if ws.done() {
+		if ws.Done() {
 			break
 		}
 	}
 }
 
-func (ws Workers) done() bool {
+func (ws Workers) Done() bool {
 	for _, w := range ws {
 		if !w.done {
 			return false
