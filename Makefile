@@ -173,22 +173,10 @@ version:
 git_guard:
 	$Q git diff --exit-code
 git_tag:
-	git tag command/${VERSION}
+	git tag ${VERSION}
 git_push_tag:
-	git push origin command/${VERSION}
+	git push origin ${VERSION}
 tag: git_tag git_push_tag
 
 .PHONY: ci
 ci:	fmt git_guard test
-
-
-.PHONY: docker_build docker_release
-docker_build: packages
-	brocket build
-
-docker_release_command: docker_build
-	brocket release -D
-
-
-
-
