@@ -5,7 +5,7 @@
 ## Usage
 
 ```go
-import "github.com/groovenauts/concurrent"
+import "github.com/groovenauts/concurrent-go"
 ```
 
 See https://github.com/groovenauts/concurrent-go/blob/master/workers_test.go for more detail.
