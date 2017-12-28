@@ -25,37 +25,43 @@ func NewCopyFunc(t *testing.T) func(job *Job) error {
 	}
 }
 
-func TestWorkersProcess(t *testing.T) {
+func TestWorkersProcessEmptyJobs(t *testing.T) {
 	workers := NewWorkers(NewCopyFunc(t), 3)
-
-	// Empty jobs
 	jobs0 := Jobs{}
 	err := workers.process(jobs0)
 	assert.NoError(t, err)
+}
 
-	// 1 job
+func TestWorkersProcess1Job(t *testing.T) {
+	workers := NewWorkers(NewCopyFunc(t), 3)
 	jobs1 := Jobs{
 		&Job{Payload: &TestPayload{Input: "foo"}},
 	}
-	err = workers.process(jobs1)
+	err := workers.process(jobs1)
 	assert.NoError(t, err)
+}
 
-	// 1 error job
+func TestWorkersProcess1ErrorJob(t *testing.T) {
+	workers := NewWorkers(NewCopyFunc(t), 3)
 	jobs1Error := Jobs{
 		&Job{Payload: &TestPayload{}},
 	}
-	err = workers.process(jobs1Error)
+	err := workers.process(jobs1Error)
 	assert.Equal(t, "Input is blank", err.Error())
+}
 
-	// 1 success and 1 error
+func TestWorkersProcess1SuccessAnd1Error(t *testing.T) {
+	workers := NewWorkers(NewCopyFunc(t), 3)
 	jobs1Success1Error := Jobs{
 		&Job{Payload: &TestPayload{Input: "foo"}},
 		&Job{Payload: &TestPayload{}},
 	}
-	err = workers.process(jobs1Success1Error)
+	err := workers.process(jobs1Success1Error)
 	assert.Equal(t, "Input is blank", err.Error())
+}
 
-	// 3 success and 2 error
+func TestWorkersProcess3SuccessesAnd2Errors(t *testing.T) {
+	workers := NewWorkers(NewCopyFunc(t), 3)
 	jobs3Success2Error := Jobs{
 		&Job{Payload: &TestPayload{}},
 		&Job{Payload: &TestPayload{Input: "foo"}},
@@ -63,15 +69,17 @@ func TestWorkersProcess(t *testing.T) {
 		&Job{Payload: &TestPayload{}},
 		&Job{Payload: &TestPayload{Input: "foo"}},
 	}
-	err = workers.process(jobs3Success2Error)
+	err := workers.process(jobs3Success2Error)
 	assert.Equal(t, "Input is blank\nInput is blank", err.Error())
+}
 
-	// 3 success
+func TestWorkersProcess3Successes(t *testing.T) {
+	workers := NewWorkers(NewCopyFunc(t), 3)
 	jobs3Success := Jobs{
 		&Job{Payload: &TestPayload{Input: "foo"}},
 		&Job{Payload: &TestPayload{Input: "foo"}},
 		&Job{Payload: &TestPayload{Input: "foo"}},
 	}
-	err = workers.process(jobs3Success)
+	err := workers.process(jobs3Success)
 	assert.NoError(t, err)
 }
